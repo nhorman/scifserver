@@ -12,6 +12,7 @@
 #include <ss-config.h>
 #include <component.h>
 #include <log.h>
+#include <config.h>
 
 /**
  * @brief tag to indicate a variable is unused 
