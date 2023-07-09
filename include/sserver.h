@@ -16,5 +16,10 @@
  */
 #define __unused  __attribute__((unused))
 
+/**
+ * \brief macro to compute the number of elements in an array at compile time
+ */
+#define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]))
+
 #endif
 
