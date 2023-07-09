@@ -10,6 +10,8 @@
 #ifndef __SSERVER_H__
 #define __SSERVER_H__
 #include <ss-config.h>
+#include <component.h>
+#include <log.h>
 
 /**
  * @brief tag to indicate a variable is unused 

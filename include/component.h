@@ -90,9 +90,8 @@ void register_component(struct component_register_info *ops);
  * \param cfn - the componenttem start function
  * \param efn - the componenttem shutdown function
  * \param prio - the priority of the registration
- * \param cfg - the config structure for this componenttem
  */
-#define REGISTER_COMPONENT(name, config, init, start, shutdown, prio, cfg) \
+#define REGISTER_COMPONENT(name, config, init, start, shutdown, prio) \
 	static struct component_register_info __ ## name ## _info = { \
 		#name, \
 		config, \
@@ -100,7 +99,6 @@ void register_component(struct component_register_info *ops);
 		start, \
 		shutdown, \
 		prio, \
-		cfg, \
 		NULL \
 	}; \
 	void __componentreg(prio) register_ ## name ## _component() { \

@@ -65,5 +65,5 @@ AC_MSG_NOTICE([Installation prefix:    $prefix])
 AC_MSG_NOTICE([Compiler:               $CC])
 AC_MSG_NOTICE([Compiler flags: $CFLAGS])
 
-AC_CONFIG_FILES([Makefile component/Makefile])
+AC_CONFIG_FILES([Makefile component/Makefile log/Makefile])
 AC_OUTPUT

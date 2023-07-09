@@ -1,4 +1,4 @@
-SUBDIRS = component
+SUBDIRS = component log
 AUTOMAKE_OPTIONS = subdir-objects 
 ACLOCAL_AMFLAGS = -I m4
 EXTRA_DIST = LICENSE autogen.sh
@@ -8,7 +8,7 @@ GITDIRTY := $(shell git update-index --refresh >/dev/null 2>&1; git diff-index -
 
 .PHONY: docs 
 
-SCIFLIBS := ./component/libcomponent.a
+SCIFLIBS := ./component/libcomponent.a ./log/liblog.a
 
 sbin_PROGRAMS= scifserver
 scifserver_SOURCES = main.c
