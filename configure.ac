@@ -40,6 +40,12 @@ AS_IF([test "x$have_pthread" = "xyes"],[
 
 AC_CHECK_FUNC(getopt_long,[AC_DEFINE(HAVE_GETOPT_LONG,[],[Is the getopt_long function available])],[AC_MSG_NOTICE([Falling back to getopt])])
 
+PKG_CHECK_MODULES([PROTOBUFC], [libprotobuf-c],
+	[AC_DEFINE(HAVE_PROTOBUFC,[], [protobuf-c support available])],
+	[AC_MSG_ERROR([ibprotobuf-c libraries missing])])
+
+AC_CHECK_TOOL([PROTOC], [protoc], [], [])
+
 AS_IF([test "x$enable_cunit" != "xno"], [
 	AC_DEFINE(STATIC_DECL,[ ],[All functions public])
 	AC_DEFINE(HAVE_CUNIT,[],[Building the test suite])
