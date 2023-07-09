@@ -13,8 +13,7 @@ SCIFLIBS := ./component/libcomponent.a
 sbin_PROGRAMS= scifserver
 scifserver_SOURCES = main.c
 
-scifserver_LDFLAGS = -Wl,--whole-archive
-scifserver_LDADD = $(SCIFLIBS)
+scifserver_LDFLAGS = -Wl,--whole-archive $(SCIFLIBS) -Wl,--no-whole-archive
 
 docs:
 	doxygen ./docs/scifserver.dox

@@ -18,6 +18,7 @@
 #ifndef __LOG_H__
 #define __LOG_H__
 #include <sserver.h>
+#include <stdio.h>
 #include <stdarg.h>
 
 #ifndef LOG_EMERG
@@ -52,5 +53,5 @@
 #define LOG_DEBUG       7       /* debug-level messages */
 #endif
 
-#define LOGMSG(prio, fmt, ...) do { fprintf(stderr, "%s|%s|%d|%s", __FILE__, __FUNCTION__, __LINE__, fmt, ## args); } while (0)
+#define LOGMSG(prio, fmt, ...) do { fprintf(stderr, "%s|%s|%d|%s", __FILE__, __FUNCTION__, __LINE__, fmt, ## __VA_ARGS__); } while (0)
 #endif
