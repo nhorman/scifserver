@@ -56,7 +56,7 @@ AS_IF([test "x$enable_cunit" != "xno"], [
 	])
 AM_CONDITIONAL([CUNIT], [test "x$enable_cunit" = "xyes"])
 
-CFLAGS="-I\${top_srcdir} -I\${top_srcdir}/include -Wall -Werror"
+CFLAGS+=" -I\${top_srcdir} -I\${top_srcdir}/include -Wall -Werror "
 
 AC_MSG_NOTICE()
 AC_MSG_NOTICE([scifserver Version:     $VERSION])
@@ -65,5 +65,5 @@ AC_MSG_NOTICE([Installation prefix:    $prefix])
 AC_MSG_NOTICE([Compiler:               $CC])
 AC_MSG_NOTICE([Compiler flags: $CFLAGS])
 
-AC_CONFIG_FILES([Makefile component/Makefile log/Makefile])
+AC_CONFIG_FILES([Makefile component/Makefile])
 AC_OUTPUT
