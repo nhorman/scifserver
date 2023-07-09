@@ -8,6 +8,6 @@ GITDIRTY := $(shell git update-index --refresh >/dev/null 2>&1; git diff-index -
 
 .PHONY: 
 
-AM_CPPFLAGS = -I${top_srcdir} -W -Wall
+AM_CPPFLAGS = -I${top_srcdir} -I${top_srcdir}/include -Wall -Werror
 sbin_PROGRAMS= scifserver
 scifserver_SOURCES = main.c
