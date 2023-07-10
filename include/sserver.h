@@ -13,6 +13,8 @@
 #include <stdbool.h>
 #include <glib.h>
 
+#include <serversocket.h>
+
 #define LOGMSG(prio, fmt, args...) g_log_structured(G_LOG_DOMAIN, prio, "MESSAGE", fmt, ## args)
 #endif
 

@@ -15,6 +15,13 @@ int main(int argc, char *argv[])
 		rc = -ENOMEM;
 		goto out;
 	}
+
+	rc = create_server_socket(mainloop);
+	if (rc) {
+		LOGMSG(G_LOG_LEVEL_ERROR, "Unable to create server socket: %s\n", strerror(rc));
+		goto out;
+	}
+
 	g_main_loop_run(mainloop);
 
 	rc = 0;
