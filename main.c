@@ -11,6 +11,10 @@ int main(int argc, char __unused *argv[])
 		goto out;
 	}
 
+	if (config_read_config(DEFAULT_CONFIG_PATH)) {
+		LOGMSG(LOG_ERR, "Unable to read config file\n");
+	}
+
 out:
 	return rc;
 }

@@ -53,5 +53,5 @@
 #define LOG_DEBUG       7       /* debug-level messages */
 #endif
 
-#define LOGMSG(prio, fmt, ...) do { fprintf(stderr, "%s|%s|%d|%s", __FILE__, __FUNCTION__, __LINE__, fmt, ## __VA_ARGS__); } while (0)
+#define LOGMSG(prio, fmt, ...) do { fprintf(stderr, "%s|%s|%d|" fmt, __FILE__, __FUNCTION__, __LINE__, ##__VA_ARGS__); } while (0)
 #endif

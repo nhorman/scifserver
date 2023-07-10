@@ -14,6 +14,10 @@
 #include <stdio.h>
 #include <stdarg.h>
 
+
+
+#define DEFAULT_CONFIG_PATH "/etc/scifserver.conf"
+
 /**
  * \brief get a configuration item
  * fetches a config value from the config tree 
@@ -25,27 +29,6 @@
  * \return  -EINVAL on all other errors
  */
 int config_get_item(const char *path, void **val);
-
-/**
- * \brief set a cmdline value
- * simple cmd line db interface
- * \param name - name to set
- * \param value - pointer to pointer value to store for name
- * \returns 0 on success
- * \returns 1 on sucess when value was replaced
- * \returns < 0 on error
- */
-int config_set_cmdline_value(const char *name, void **value);
-
-/**
- * \brief get a cmdline value
- * simple cmd line db interface
- * \param name - name to get
- * \param value - pointer to pointer value to fetch for name
- * \returns 0 on success
- * \returns < 0 on error
- */
-int config_get_cmdline_value(const char *name, void **value);
 
 /**
  * \brief read configuration file

@@ -14,6 +14,6 @@ sbin_PROGRAMS= scifserver
 scifserver_SOURCES = main.c
 
 scifserver_LDFLAGS = -Wl,--whole-archive $(SCIFLIBS) -Wl,--no-whole-archive
-
+scifserver_LDADD = $(JSON_GLIB_LIBS)
 docs:
 	doxygen ./docs/scifserver.dox
