@@ -1,20 +1,23 @@
 #include <sserver.h>
 
-int main(int argc, char __unused *argv[])
+int main(int argc, char *argv[])
 {
+	GMainLoop *mainloop = NULL;
 	int rc = 0;
-	LOGMSG(LOG_INFO, "Starting SCIF server\n");
 
-	if (config_components()) {
-		LOGMSG(LOG_ERR, "Failed to config subsystems, shutting down\n");
-		rc = 1;
+	g_log_set_writer_func (g_log_writer_journald, NULL, NULL);
+
+	LOGMSG(G_LOG_LEVEL_INFO, "Starting scifserver\n");
+
+	mainloop = g_main_loop_new(NULL, false);
+	if (!mainloop) {
+		LOGMSG(G_LOG_LEVEL_ERROR, "Unable to create main loop\n");
+		rc = -ENOMEM;
 		goto out;
 	}
+	g_main_loop_run(mainloop);
 
-	if (config_read_config(DEFAULT_CONFIG_PATH)) {
-		LOGMSG(LOG_ERR, "Unable to read config file\n");
-	}
-
+	rc = 0;
 out:
 	return rc;
 }

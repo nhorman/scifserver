@@ -46,7 +46,7 @@ PKG_CHECK_MODULES([PROTOBUFC], [libprotobuf-c],
 
 AC_CHECK_TOOL([PROTOC], [protoc], [], [])
 
-PKG_CHECK_MODULES([JSON_GLIB],[json-glib-1.0], [],[AC_MSG_ERROR([json-glib is required])])
+PKG_CHECK_MODULES([GLIB],[glib-2.0], [],[AC_MSG_ERROR([glib is required])])
 
 AS_IF([test "x$enable_cunit" != "xno"], [
 	AC_DEFINE(STATIC_DECL,[ ],[All functions public])
@@ -67,5 +67,5 @@ AC_MSG_NOTICE([Installation prefix:    $prefix])
 AC_MSG_NOTICE([Compiler:               $CC])
 AC_MSG_NOTICE([Compiler flags: $CFLAGS])
 
-AC_CONFIG_FILES([Makefile component/Makefile config/Makefile])
+AC_CONFIG_FILES([Makefile])
 AC_OUTPUT

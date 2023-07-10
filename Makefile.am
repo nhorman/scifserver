@@ -1,4 +1,4 @@
-SUBDIRS = component config
+SUBDIRS = 
 AUTOMAKE_OPTIONS = subdir-objects 
 ACLOCAL_AMFLAGS = -I m4
 EXTRA_DIST = LICENSE autogen.sh
@@ -8,12 +8,10 @@ GITDIRTY := $(shell git update-index --refresh >/dev/null 2>&1; git diff-index -
 
 .PHONY: docs 
 
-SCIFLIBS := ./component/libcomponent.a ./config/libconfigure.a
-
 sbin_PROGRAMS= scifserver
 scifserver_SOURCES = main.c
+scifserver_CFLAGS = $(GLIB_CFLAGS)
+scifserver_LDADD = $(GLIB_LIBS)
 
-scifserver_LDFLAGS = -Wl,--whole-archive $(SCIFLIBS) -Wl,--no-whole-archive
-scifserver_LDADD = $(JSON_GLIB_LIBS)
 docs:
 	doxygen ./docs/scifserver.dox
