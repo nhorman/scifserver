@@ -46,6 +46,8 @@ PKG_CHECK_MODULES([PROTOBUFC], [libprotobuf-c],
 
 AC_CHECK_TOOL([PROTOC], [protoc], [], [])
 
+PKG_CHECK_MODULES([JSON_GLIB],[json-glib-1.0], [],[AC_MSG_ERROR([json-glib is required])])
+
 AS_IF([test "x$enable_cunit" != "xno"], [
 	AC_DEFINE(STATIC_DECL,[ ],[All functions public])
 	AC_DEFINE(HAVE_CUNIT,[],[Building the test suite])
