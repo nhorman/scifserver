@@ -5,13 +5,14 @@
 #include <client-private.h>
 #include <messages.pb-c.h>
 
-static int handle_client_response(client *c){
+static int handle_client_response(struct client *c){
 	g_info("Got client response\n");
+	return 0;
 }
 
 int start_client_tls(struct client *c)
 {
-	identify_request msg = IDENTIFY_REQUEST_INIT;
+	IdentifyRequest msg = IDENTIFY_REQUEST__INIT;
 	uint32_t len;
 	void *buf;
 
@@ -25,7 +26,7 @@ int start_client_tls(struct client *c)
 
 	/* Send the identify request to the client */
 	msg.nonce = "The Quick Brown Fox Jumped Over The Lazy Dog";
-	len = identify_request__get_packetd_size(&msg);
+	len = identify_request__get_packed_size(&msg);
 	buf = malloc(len);
 	identify_request__pack(&msg, buf);
 	g_info("Requesting Client user Identity\n");
