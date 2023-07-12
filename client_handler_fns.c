@@ -14,6 +14,7 @@ int start_client_tls(struct client *c)
 		g_warning("Unable to establish ssh session\n");
 		delete_client(c->sd);
 	}
+
 	return 0;
 }
 

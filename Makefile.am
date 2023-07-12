@@ -9,10 +9,14 @@ GITDIRTY := $(shell git update-index --refresh >/dev/null 2>&1; git diff-index -
 .PHONY: docs 
 
 sbin_PROGRAMS= scifserver
-scifserver_SOURCES = main.c serversocket.c client.c client_handler_fns.c
-scifserver_CFLAGS = $(GLIB_CFLAGS) $(OPENSSL_CFLAGS)
-scifserver_LDADD = $(GLIB_LIBS) $(OPENSSL_LIBS)
+scifserver_SOURCES = main.c serversocket.c client.c client_handler_fns.c messages.pb-c.c
+scifserver_CFLAGS = $(GLIB_CFLAGS) $(OPENSSL_CFLAGS) $(PROTOBUFC_CFLAGS)
+scifserver_LDADD = $(GLIB_LIBS) $(OPENSSL_LIBS) $(PROTOBUFC_LIBS)
 
 
 docs:
 	doxygen ./docs/scifserver.dox
+
+
+%.c : %.proto 
+	$(PROTOC) --c_out=. %<
