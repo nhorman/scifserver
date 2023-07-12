@@ -18,5 +18,5 @@ docs:
 	doxygen ./docs/scifserver.dox
 
 
-%.c : %.proto 
-	$(PROTOC) --c_out=. %<
+messages.pb-c.c : messages.proto 
+	$(PROTOC) --c_out=. $<
