@@ -10,7 +10,7 @@ static GMainLoop *mainloop = NULL;
 
 static gboolean accept_new_socket(gpointer arg)
 {
-	int sd = *((int *)arg);
+	int sd = GPOINTER_TO_INT(arg);
 	int rc;
 	int newcfd;
 	struct sockaddr_in newsock;
@@ -19,7 +19,6 @@ static gboolean accept_new_socket(gpointer arg)
 	g_info("Accpeting new connection\n");
 	newcfd = accept(sd, (struct sockaddr *)&newsock, &addrlen);
 
-	int create_client(int sd, GMainLoop *loop);
 	rc = create_client(newcfd, mainloop);
 	if (rc) {
 		g_error("Unable to create client\n");
@@ -65,7 +64,7 @@ int setup_server_listening_socket(GMainLoop *loop)
 		goto out_close;
 	}
 	mainloop = loop;
-	g_source_set_callback(listen_socket_source, accept_new_socket, &sd, NULL);
+	g_source_set_callback(listen_socket_source, accept_new_socket, NULL, NULL);
 	g_source_attach(listen_socket_source, g_main_loop_get_context(loop));
 	rc = 0;
 out:

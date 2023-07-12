@@ -14,5 +14,7 @@ struct client {
 
 int create_client(int sd, GMainLoop *loop);
 
+int start_client_tls(struct client *c);
+
 #endif
 

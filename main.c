@@ -22,6 +22,10 @@ int main(int argc, char *argv[])
 		goto out;
 	}
 
+	rc = setup_client_handling(-1);
+	if (rc) {
+		g_error("Unable to setup client handling\n");
+	}
 	rc = setup_server_listening_socket(mainloop);
 	if (rc) {
 		g_error("Unable to create server socket\n");
