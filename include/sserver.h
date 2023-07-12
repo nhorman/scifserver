@@ -14,6 +14,7 @@
 #include <glib.h>
 
 #include <serversocket.h>
+#include <client.h>
 
 #endif
 

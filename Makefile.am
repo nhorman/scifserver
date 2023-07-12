@@ -9,7 +9,7 @@ GITDIRTY := $(shell git update-index --refresh >/dev/null 2>&1; git diff-index -
 .PHONY: docs 
 
 sbin_PROGRAMS= scifserver
-scifserver_SOURCES = main.c serversocket.c
+scifserver_SOURCES = main.c serversocket.c client.c client_handler_fns.c
 scifserver_CFLAGS = $(GLIB_CFLAGS)
 scifserver_LDADD = $(GLIB_LIBS)
 

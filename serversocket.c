@@ -3,18 +3,27 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <glib-unix.h>
+#include <client-private.h>
 
 static GSource *listen_socket_source = NULL;
+static GMainLoop *mainloop = NULL;
 
 static gboolean accept_new_socket(gpointer arg)
 {
-	int sd = (int)arg;
-	int newcfg;
+	int sd = *((int *)arg);
+	int rc;
+	int newcfd;
 	struct sockaddr_in newsock;
+	socklen_t addrlen = sizeof(struct sockaddr_in);
 
 	g_info("Accpeting new connection\n");
-	newcfd = accept(sd, &newsock, sizeof(struct sockaddr_in));
-	
+	newcfd = accept(sd, (struct sockaddr *)&newsock, &addrlen);
+
+	int create_client(int sd, GMainLoop *loop);
+	rc = create_client(newcfd, mainloop);
+	if (rc) {
+		g_error("Unable to create client\n");
+	}	
 	return G_SOURCE_CONTINUE;
 }
 
@@ -23,7 +32,7 @@ int setup_server_listening_socket(GMainLoop *loop)
 	int rc = -ENOMEM;
 	int sd;
 	struct sockaddr_in addr;
-	
+
 	/* start by allocating a socket */
 	sd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 
@@ -55,7 +64,8 @@ int setup_server_listening_socket(GMainLoop *loop)
 		g_warning("Unable to create source\n");
 		goto out_close;
 	}
-	g_source_set_callback(listen_socket_source, accept_new_socket, sd, NULL);
+	mainloop = loop;
+	g_source_set_callback(listen_socket_source, accept_new_socket, &sd, NULL);
 	g_source_attach(listen_socket_source, g_main_loop_get_context(loop));
 	rc = 0;
 out:
