@@ -47,6 +47,7 @@ PKG_CHECK_MODULES([PROTOBUFC], [libprotobuf-c],
 AC_CHECK_TOOL([PROTOC], [protoc], [], [])
 
 PKG_CHECK_MODULES([GLIB],[glib-2.0], [],[AC_MSG_ERROR([glib is required])])
+PKG_CHECK_MODULES([OPENSSL],[openssl],[],[AC_MSG_ERROR([openssl is required])])
 
 AS_IF([test "x$enable_cunit" != "xno"], [
 	AC_DEFINE(STATIC_DECL,[ ],[All functions public])

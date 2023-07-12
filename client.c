@@ -17,8 +17,8 @@ static void process_client(gpointer data, gpointer user_data)
 	if (rc) {
 		g_error("handler function failed\n");
 	}
+	c->pending_exec = false;
 	g_rc_box_release(c);
-	c->pending_exec  = false;
 	return;
 }
 
@@ -43,24 +43,26 @@ out:
 	return rc;
 }
 
-void shutdown_client_handling()
+int cleanup_client_handling()
 {
 
-	g_thread_pool_free(workers, false, true);
+	g_thread_pool_free(workers, true, true);
 	workers = NULL;
 	g_hash_table_destroy(clienttable);
 	clienttable = NULL;
+	return 0;
 }
 
 
 static gboolean client_socket_handler(gpointer arg)
 {
-	int sd = *((int *)arg);
+	int sd = GPOINTER_TO_INT(arg); 
 	GError *err = NULL;
 
 	struct client *c = g_hash_table_lookup(clienttable, &sd);
 	if (!c) {
-		g_error("Did not find client for sd %d\n", sd);
+		g_warning("Did not find client for sd %d\n", sd);
+		goto out;
 	}
 	if (c->pending_exec) {
 		goto out;
@@ -76,7 +78,7 @@ out:
 	return G_SOURCE_CONTINUE;
 }
 
-int create_client(int sd, GMainLoop *loop)
+int create_client(int sd, GMainLoop *loop, SSL_CTX *ctx)
 {
 	int rc = -ENOMEM;
 	struct client *newc = g_rc_box_new(struct client);
@@ -88,15 +90,32 @@ int create_client(int sd, GMainLoop *loop)
 	newc->handler = start_client_tls;
 	newc->source = g_unix_fd_source_new(sd, G_IO_IN);
 	newc->pending_exec = false;
+	newc->ctx = ctx;
 	g_source_set_callback(newc->source, client_socket_handler, &newc->sd, NULL);
         g_source_attach(newc->source, g_main_loop_get_context(loop));	
 	if (g_hash_table_insert(clienttable, newc, &newc->sd) != true) {
 		g_error("Inserting sd %d twice!\n", sd);
 	}
+
+	/* Prime the state machien */
+	g_rc_box_acquire(newc);
+	process_client(newc, NULL);
 	
 	rc = 0;	
 out:
 	return rc;
 }
 
-
+int delete_client(int sd)
+{
+	struct client *c = g_hash_table_lookup(clienttable, &sd);
+	g_hash_table_remove(clienttable, &sd);
+	if (c->ssl) {
+		SSL_shutdown(c->ssl);
+		SSL_free(c->ssl);
+	}
+	close(c->sd);
+	g_source_destroy(c->source);
+	g_rc_box_release(c);
+	return 0;
+}

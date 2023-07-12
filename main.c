@@ -34,6 +34,15 @@ int main(int argc, char *argv[])
 
 	g_main_loop_run(mainloop);
 
+	rc = cleanup_client_handling();
+	if (rc) {
+		g_warning("Unable to cleanup client handling\n");
+	}
+	rc = shutdown_listening_socket();
+	if (rc) {
+		g_warning("Unable to shutdown listening socket\n");
+	}
+
 	rc = 0;
 out:
 	return rc;

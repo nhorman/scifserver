@@ -7,6 +7,8 @@
 
 static GSource *listen_socket_source = NULL;
 static GMainLoop *mainloop = NULL;
+static SSL_CTX *ctx = NULL;
+static int sd = -1;
 
 static gboolean accept_new_socket(gpointer arg)
 {
@@ -19,7 +21,7 @@ static gboolean accept_new_socket(gpointer arg)
 	g_info("Accpeting new connection\n");
 	newcfd = accept(sd, (struct sockaddr *)&newsock, &addrlen);
 
-	rc = create_client(newcfd, mainloop);
+	rc = create_client(newcfd, mainloop, ctx);
 	if (rc) {
 		g_error("Unable to create client\n");
 	}	
@@ -29,8 +31,12 @@ static gboolean accept_new_socket(gpointer arg)
 int setup_server_listening_socket(GMainLoop *loop)
 {
 	int rc = -ENOMEM;
-	int sd;
+	const SSL_METHOD *method;
 	struct sockaddr_in addr;
+
+	method = TLS_server_method();
+	ctx = SSL_CTX_new(method);
+	/* Set up cert info here */
 
 	/* start by allocating a socket */
 	sd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
@@ -74,4 +80,13 @@ out_close:
 	goto out;
 }
 
+int shutdown_listening_socket()
+{
+	close(sd);
+	sd = -1;
+	if (ctx) {
+		SSL_CTX_free(ctx);
+	}
+	return 0;
+}
 
