@@ -26,7 +26,6 @@ AM_INIT_AUTOMAKE([foreign])
 AC_PROG_CC
 AC_PROG_INSTALL
 AC_PROG_RANLIB
-
 AC_PROG_EGREP
 
 #determine if we are in a git tree
@@ -59,7 +58,7 @@ AS_IF([test "x$enable_cunit" != "xno"], [
 	])
 AM_CONDITIONAL([CUNIT], [test "x$enable_cunit" = "xyes"])
 
-CFLAGS+=" -I\${top_srcdir} -I\${top_srcdir}/include -Wall -Werror "
+CFLAGS+=" -I\${top_srcdir} -I\${top_srcdir}/include -I\${top_srcdir}/messages -Wall -Werror "
 
 AC_MSG_NOTICE()
 AC_MSG_NOTICE([scifserver Version:     $VERSION])
@@ -68,5 +67,5 @@ AC_MSG_NOTICE([Installation prefix:    $prefix])
 AC_MSG_NOTICE([Compiler:               $CC])
 AC_MSG_NOTICE([Compiler flags: $CFLAGS])
 
-AC_CONFIG_FILES([Makefile])
+AC_CONFIG_FILES([Makefile messages/Makefile testclient/Makefile])
 AC_OUTPUT

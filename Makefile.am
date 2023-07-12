@@ -1,4 +1,4 @@
-SUBDIRS = 
+SUBDIRS = messages testclient
 AUTOMAKE_OPTIONS = subdir-objects 
 ACLOCAL_AMFLAGS = -I m4
 EXTRA_DIST = LICENSE autogen.sh
@@ -9,17 +9,11 @@ GITDIRTY := $(shell git update-index --refresh >/dev/null 2>&1; git diff-index -
 .PHONY: docs 
 
 sbin_PROGRAMS= scifserver
-scifserver_SOURCES = messages.pb-c.c main.c serversocket.c client.c client_handler_fns.c
+scifserver_SOURCES = main.c serversocket.c client.c client_handler_fns.c
 scifserver_CFLAGS = $(GLIB_CFLAGS) $(OPENSSL_CFLAGS) $(PROTOBUFC_CFLAGS)
-scifserver_LDADD = $(GLIB_LIBS) $(OPENSSL_LIBS) $(PROTOBUFC_LIBS)
+scifserver_LDADD = messages/libmessages.a $(GLIB_LIBS) $(OPENSSL_LIBS) $(PROTOBUFC_LIBS)
 
 
 docs:
 	doxygen ./docs/scifserver.dox
 
-
-messages.pb-c.c : messages.proto 
-	$(PROTOC) --c_out=. $<
-
-clean-generic:
-	rm -f ./messages.pb-c.*
