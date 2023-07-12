@@ -20,3 +20,6 @@ docs:
 
 messages.pb-c.c : messages.proto 
 	$(PROTOC) --c_out=. $<
+
+clean-generic:
+	rm -f ./messages.pb-c.*
