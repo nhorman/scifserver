@@ -4,6 +4,7 @@
 #ifndef __CLIENT_PRIVATE_H__
 #define __CLIENT_PRIVATE_H__
 #include <sserver.h>
+#include <openssl/opensslv.h>
 #include <openssl/ssl.h>
 #include <openssl/err.h>
 

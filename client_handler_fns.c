@@ -21,7 +21,9 @@ int start_client_tls(struct client *c)
 	SSL_set_fd(c->ssl, c->sd);
 	if (SSL_accept(c->ssl) <= 0) {
 		g_warning("Unable to establish ssh session\n");
+		ERR_print_errors_fp(stderr);
 		delete_client(c->sd);
+		goto out;
 	}
 
 	/* Send the identify request to the client */
@@ -33,6 +35,7 @@ int start_client_tls(struct client *c)
 	SSL_write(c->ssl, buf, len);
 	free(buf);
 	c->handler = handle_client_response;
+out:
 	return 0;
 }
 

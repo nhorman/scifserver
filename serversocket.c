@@ -34,9 +34,26 @@ int setup_server_listening_socket(GMainLoop *loop)
 	const SSL_METHOD *method;
 	struct sockaddr_in addr;
 
+	SSL_library_init();
+	OPENSSL_add_all_algorithms_noconf();
+	ERR_load_crypto_strings();
+	SSL_load_error_strings();
+
 	method = TLS_server_method();
 	ctx = SSL_CTX_new(method);
 	/* Set up cert info here */
+	if (SSL_CTX_use_certificate_file(ctx,"./certificate.pem", SSL_FILETYPE_PEM) <= 0) {
+		g_warning("Unable to load certificate file\n");
+		goto out;
+	}
+	if (SSL_CTX_use_PrivateKey_file(ctx, "./key.pem", SSL_FILETYPE_PEM) <= 0) {
+		g_warning("Unable to load key file\n");
+		goto out;
+	}
+	if (!SSL_CTX_check_private_key(ctx)) {
+		g_warning("Key / Certificate Mismatch\n");
+		goto out;
+	}
 
 	/* start by allocating a socket */
 	sd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);

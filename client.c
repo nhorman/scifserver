@@ -81,6 +81,7 @@ out:
 int create_client(int sd, GMainLoop *loop, SSL_CTX *ctx)
 {
 	int rc = -ENOMEM;
+	GError *err = NULL;
 	struct client *newc = g_rc_box_new(struct client);
 	if (!newc) {
 		goto out;
@@ -99,7 +100,10 @@ int create_client(int sd, GMainLoop *loop, SSL_CTX *ctx)
 
 	/* Prime the state machien */
 	g_rc_box_acquire(newc);
-	process_client(newc, NULL);
+	newc->pending_exec = true;
+	if (!g_thread_pool_push(workers, newc, &err)) {
+		g_error("Failed to push new thread: %s\n", err->message);
+	}
 	
 	rc = 0;	
 out:
