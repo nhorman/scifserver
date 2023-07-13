@@ -18,4 +18,4 @@ docs:
 	doxygen ./docs/scifserver.dox
 
 beautify:
-	find . -name '*.[ch] | uncrustify -F - -c ./uncrustify-linux.cfg
+	find . -name '*.[ch] | uncrustify -c ./uncrustify-linux.cfg -F -
