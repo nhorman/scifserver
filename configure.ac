@@ -47,16 +47,7 @@ AC_CHECK_TOOL([PROTOC], [protoc], [], [])
 
 PKG_CHECK_MODULES([GLIB],[glib-2.0], [],[AC_MSG_ERROR([glib is required])])
 PKG_CHECK_MODULES([OPENSSL],[openssl],[],[AC_MSG_ERROR([openssl is required])])
-
-AS_IF([test "x$enable_cunit" != "xno"], [
-	AC_DEFINE(STATIC_DECL,[ ],[All functions public])
-	AC_DEFINE(HAVE_CUNIT,[],[Building the test suite])
-	PKG_CHECK_MODULES([CUNIT], [cunit], [], [AC_MSG_ERROR([cunit is required])])
-	AC_CHECK_HEADERS(execinfo.h, [AC_DEFINE(HAVE_EXECINFO,[],[Enabling execinfo features])],[],[])
-	],[
-	AC_DEFINE(STATIC_DECL,[static],[All functions static])
-	])
-AM_CONDITIONAL([CUNIT], [test "x$enable_cunit" = "xyes"])
+AC_CHECK_FUNC(getopt_long,[AC_DEFINE(HAVE_GETOPT_LONG,[],[Is the getopt_long function available])],[AC_MSG_NOTICE([Falling back to getopt])])
 
 CFLAGS+=" -I\${top_srcdir} -I\${top_srcdir}/include -I\${top_srcdir}/messages -Wall -Werror "
 

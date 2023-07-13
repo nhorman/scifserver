@@ -28,7 +28,7 @@ static gboolean accept_new_socket(gpointer arg)
 	return G_SOURCE_CONTINUE;
 }
 
-int setup_server_listening_socket(GMainLoop *loop)
+int setup_server_listening_socket(GMainLoop *loop, const char *keyfile, const char *certfile)
 {
 	int rc = -ENOMEM;
 	const SSL_METHOD *method;
@@ -42,11 +42,11 @@ int setup_server_listening_socket(GMainLoop *loop)
 	method = TLS_server_method();
 	ctx = SSL_CTX_new(method);
 	/* Set up cert info here */
-	if (SSL_CTX_use_certificate_file(ctx,"./certificate.pem", SSL_FILETYPE_PEM) <= 0) {
+	if (SSL_CTX_use_certificate_file(ctx, certfile, SSL_FILETYPE_PEM) <= 0) {
 		g_warning("Unable to load certificate file\n");
 		goto out;
 	}
-	if (SSL_CTX_use_PrivateKey_file(ctx, "./key.pem", SSL_FILETYPE_PEM) <= 0) {
+	if (SSL_CTX_use_PrivateKey_file(ctx, keyfile, SSL_FILETYPE_PEM) <= 0) {
 		g_warning("Unable to load key file\n");
 		goto out;
 	}

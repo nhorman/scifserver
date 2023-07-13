@@ -17,3 +17,5 @@ scifserver_LDADD = messages/libmessages.a $(GLIB_LIBS) $(OPENSSL_LIBS) $(PROTOBU
 docs:
 	doxygen ./docs/scifserver.dox
 
+beautify:
+	find . -name '*.[ch] | uncrustify -F - -c ./uncrustify-linux.cfg
