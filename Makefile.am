@@ -1,4 +1,4 @@
-SUBDIRS = messages testclient
+SUBDIRS = messages testclient tests
 AUTOMAKE_OPTIONS = subdir-objects 
 ACLOCAL_AMFLAGS = -I m4
 EXTRA_DIST = LICENSE autogen.sh
@@ -6,7 +6,7 @@ EXTRA_DIST = LICENSE autogen.sh
 GITREV := $(shell git rev-parse HEAD || echo "NONE")
 GITDIRTY := $(shell git update-index --refresh >/dev/null 2>&1; git diff-index --exit-code HEAD >/dev/null 2>&1 || echo "-dirty")
 
-.PHONY: docs 
+.PHONY: docs beautify 
 
 sbin_PROGRAMS= scifserver
 scifserver_SOURCES = main.c serversocket.c client.c client_handler_fns.c
@@ -18,4 +18,4 @@ docs:
 	doxygen ./docs/scifserver.dox
 
 beautify:
-	find . -name '*.[ch] | uncrustify -c ./uncrustify-linux.cfg -F -
+	$(shell find . -name '*.[ch]' | uncrustify -c ./uncrustify-linux.cfg -F -)
