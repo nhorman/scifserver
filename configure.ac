@@ -58,5 +58,5 @@ AC_MSG_NOTICE([Installation prefix:    $prefix])
 AC_MSG_NOTICE([Compiler:               $CC])
 AC_MSG_NOTICE([Compiler flags: $CFLAGS])
 
-AC_CONFIG_FILES([Makefile messages/Makefile testclient/Makefile tests/Makefile])
+AC_CONFIG_FILES([Makefile messages/Makefile scifserver/Makefile testclient/Makefile tests/Makefile])
 AC_OUTPUT
