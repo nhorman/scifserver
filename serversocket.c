@@ -8,18 +8,18 @@
 static GSource *listen_socket_source = NULL;
 static GMainLoop *mainloop = NULL;
 static SSL_CTX *ctx = NULL;
-static int sd = -1;
+int sd = -1;
 
 static gboolean accept_new_socket(gpointer arg)
 {
-	int sd = GPOINTER_TO_INT(arg);
+	int lsd = GPOINTER_TO_INT(arg);
 	int rc;
 	int newcfd;
 	struct sockaddr_in newsock;
 	socklen_t addrlen = sizeof(struct sockaddr_in);
 
 	g_info("Accpeting new connection\n");
-	newcfd = accept(sd, (struct sockaddr *)&newsock, &addrlen);
+	newcfd = accept(lsd, (struct sockaddr *)&newsock, &addrlen);
 
 	rc = create_client(newcfd, mainloop, ctx);
 	if (rc) {
@@ -87,7 +87,7 @@ int setup_server_listening_socket(GMainLoop *loop, const char *keyfile, const ch
 		goto out_close;
 	}
 	mainloop = loop;
-	g_source_set_callback(listen_socket_source, accept_new_socket, NULL, NULL);
+	g_source_set_callback(listen_socket_source, accept_new_socket, &sd, NULL);
 	g_source_attach(listen_socket_source, g_main_loop_get_context(loop));
 	rc = 0;
 out:
@@ -100,7 +100,6 @@ out_close:
 int shutdown_listening_socket()
 {
 	close(sd);
-	sd = -1;
 	if (ctx) {
 		SSL_CTX_free(ctx);
 	}

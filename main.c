@@ -71,6 +71,7 @@ int main(int argc, char *argv[])
 	int rc = 0;
 
 	g_log_set_default_handler(log_handler, NULL);
+	signal(SIGPIPE, SIG_IGN);
 
 	parse_args(argc, argv);
 

@@ -118,8 +118,9 @@ int delete_client(int sd)
 		SSL_shutdown(c->ssl);
 		SSL_free(c->ssl);
 	}
-	close(c->sd);
 	g_source_destroy(c->source);
+	g_source_unref(c->source);
+	close(c->sd);
 	g_rc_box_release(c);
 	return 0;
 }
