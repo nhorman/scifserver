@@ -10,6 +10,8 @@
 static char *keyfile = NULL;
 static char *certfile = NULL;
 
+static char *appname = NULL;
+
 #ifdef HAVE_GETOPT_LONG
 struct option lopts[] = {
         { "keyfile",    0, NULL, 'k' },
@@ -62,13 +64,15 @@ static int parse_args(int argc, char *argv[])
 
 static void log_handler(const gchar *domain, GLogLevelFlags log_level, const gchar *message, gpointer data)
 {
-	fprintf(stderr, "%s: %s", domain, message);
+	fprintf(stderr, "%s: %s", domain ? domain : appname, message);
 }
 
 int main(int argc, char *argv[])
 {
 	GMainLoop *mainloop = NULL;
 	int rc = 0;
+
+	appname = argv[0];
 
 	g_log_set_default_handler(log_handler, NULL);
 	signal(SIGPIPE, SIG_IGN);

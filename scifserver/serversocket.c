@@ -103,6 +103,7 @@ int shutdown_listening_socket()
 	if (ctx) {
 		SSL_CTX_free(ctx);
 	}
+	OPENSSL_cleanup();
 	return 0;
 }
 
