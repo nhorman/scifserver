@@ -53,6 +53,7 @@ retry_write:
 	return rc;
 }
 
+#if  0
 static int write_data_to_ssl(struct client *c, void *buf, uint32_t len)
 {
 	int rc;
@@ -97,6 +98,7 @@ retry_write:
 
 	return rc;
 }
+#endif
 
 static int handle_client_response(struct client *c){
 	uint8_t buf[1024];
@@ -110,10 +112,6 @@ static int handle_client_response(struct client *c){
 
 int start_client_tls(struct client *c)
 {
-	IdentifyRequest msg = IDENTIFY_REQUEST__INIT;
-	uint32_t len;
-	void *buf;
-
 	g_info("Establishing SSL connection for new client\n");
 	c->ssl =  SSL_new(c->ctx);
 	SSL_set_fd(c->ssl, c->sd);
@@ -124,17 +122,7 @@ int start_client_tls(struct client *c)
 		goto out;
 	}
 
-	/* Send the identify request to the client */
-	msg.nonce = "The Quick Brown Fox Jumped Over The Lazy Dog";
-	len = identify_request__get_packed_size(&msg);
-	buf = malloc(len);
-	identify_request__pack(&msg, buf);
-	g_info("Requesting Client user Identity\n");
-
 	c->handler = handle_client_response;
-	write_data_to_ssl(c, buf, len);
-
-	free(buf);
 out:
 	return 0;
 }
