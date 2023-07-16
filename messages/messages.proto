@@ -1,5 +1,5 @@
 syntax = "proto2";
 
-message identify_request {
-	required string nonce = 1;
+message get_server_info_request {
+
 }
