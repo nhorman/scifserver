@@ -1,5 +1,11 @@
 syntax = "proto2";
 
-message get_server_info_request {
+message client_request {
+	oneof submessage {
+		get_server_info_request gsir = 1;
+	}
+}
 
+message get_server_info_request {
+	optional int32 unused = 1;
 }

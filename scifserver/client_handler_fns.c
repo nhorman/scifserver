@@ -9,6 +9,27 @@
 static int read_data_from_ssl(struct client *c, void *buf, size_t *len)
 {
 	int rc;
+	char header[sizeof(size_t)];
+	size_t *msgsz;
+
+	/* All protobuf messages encode their length in the first 64 bits */
+	if (!SSL_peek(c->ssl, header, sizeof(size_t))) {
+		rc = errno;
+		g_warning("Unable to read message size\n");
+		*len = 0;
+		goto out;
+	}
+
+	msgsz = (size_t *)header;
+	if (*msgsz > *len) {
+		rc = -E2BIG;
+		g_warning("can't fit message to buffer\n");
+		*len = 0;
+		goto out;
+	}
+
+	*len = *msgsz;
+
 retry_write:
 	memset(buf, 0, *len);
 	rc = SSL_get_error(c->ssl, SSL_read_ex(c->ssl, buf, *len, len));
@@ -50,6 +71,7 @@ retry_write:
 			break;
 	}
 
+out:
 	return rc;
 }
 
@@ -100,14 +122,44 @@ retry_write:
 }
 #endif
 
-static int handle_client_response(struct client *c){
+static int handle_get_server_info_req(struct client *c, GetServerInfoRequest *req)
+{
+	return 0;
+}
+
+static int handle_client_request(struct client *c){
 	uint8_t buf[1024];
 	size_t len = 1024;
+	ClientRequest *msg;
+	int rc = -ENOMEM;
 
 	g_info("Got client response\n");
 	read_data_from_ssl(c, buf, &len);
 	g_info("Got %lu data bytes from ssl\n", len);
-	return 0;
+	msg = client_request__unpack(NULL, len, buf);
+	if (msg == NULL) {
+		g_warning("unknown message for client\n");
+		delete_client(c->sd);
+		goto out;
+	}
+
+	switch (msg->submessage_case) {
+	case CLIENT_REQUEST__SUBMESSAGE_GSIR:
+		rc = handle_get_server_info_req(c, msg->gsir);
+		break;
+	case CLIENT_REQUEST__SUBMESSAGE__NOT_SET:
+	default:
+		rc = -ENOENT;
+		g_warning("Unknown message case %d\n", msg->submessage_case);
+		delete_client(c->sd);
+		goto out_free;
+		break;
+	}
+
+out_free:
+	client_request__free_unpacked(msg, NULL);
+out:
+	return rc;
 }
 
 int start_client_tls(struct client *c)
@@ -122,7 +174,7 @@ int start_client_tls(struct client *c)
 		goto out;
 	}
 
-	c->handler = handle_client_response;
+	c->handler = handle_client_request;
 out:
 	return 0;
 }
