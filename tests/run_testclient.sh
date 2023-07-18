@@ -1,6 +1,12 @@
 #!/bin/bash
 EXIT_CODE=0
 
+function cleanup() {
+	rm -f ./scifserver.log ./scifclient.log
+}
+
+trap cleanup EXIT
+
 ../scifserver/scifserver -k ./www.example.com.key -c ./www.example.com.cert > ./scifserver.log 2>&1 &
 
 sleep 2
@@ -21,9 +27,11 @@ echo "SCIF SERVER LOGS"
 echo ========================================
 cat ./scifserver.log
 
+
 echo "SCIF CLIENT LOGS"
 echo ========================================
 cat ./scifclient.log
+
 
 exit $EXIT_CODE
 
