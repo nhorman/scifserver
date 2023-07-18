@@ -15,7 +15,7 @@ static void process_client(gpointer data, gpointer user_data)
 
 	rc = c->handler(c);
 	if (rc) {
-		g_error("handler function failed\n");
+		g_warning("Failed to handle client request\n");
 	}
 	c->pending_exec = false;
 	g_rc_box_release(c);

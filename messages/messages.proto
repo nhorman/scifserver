@@ -1,4 +1,4 @@
-syntax = "proto2";
+syntax = "proto3";
 
 message client_request {
 	oneof submessage {
@@ -6,6 +6,16 @@ message client_request {
 	}
 }
 
+message server_response {
+	oneof submessage {
+		get_server_info_response gsir = 1;
+	}
+}
+
 message get_server_info_request {
-	optional int32 unused = 1;
+	string magic = 1;
+}
+
+message get_server_info_response {
+	string pem = 1;
 }
