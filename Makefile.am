@@ -1,4 +1,4 @@
-SUBDIRS = messages scifserver testclient tests
+SUBDIRS = messages scifserver scifclient tests
 AUTOMAKE_OPTIONS = subdir-objects 
 ACLOCAL_AMFLAGS = -I m4
 EXTRA_DIST = LICENSE autogen.sh
