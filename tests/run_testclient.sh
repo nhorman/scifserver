@@ -11,7 +11,7 @@ trap cleanup EXIT
 
 sleep 2
 
-../testclient/scifclient > ./scifclient.log 2>&1
+../scifclient/scifclient > ./scifclient.log 2>&1
 if [ $? -ne 0 ]
 then
 	echo "test client failed"

@@ -9,16 +9,17 @@
 static int read_data_from_ssl(struct client *c, void *buf, size_t *len)
 {
 	int rc;
-
+    int read_ret;
 retry_write:
 	memset(buf, 0, *len);
 	g_info("Attempting to read %lu bytes\n", *len);
-	rc = SSL_get_error(c->ssl, SSL_read_ex(c->ssl, buf, *len, len));
+    read_ret = SSL_read_ex(c->ssl, buf, *len, len);
+	rc = SSL_get_error(c->ssl, read_ret);
 	switch (rc) {
 		case SSL_ERROR_NONE:
 			break;
 		case SSL_ERROR_SSL:
-			g_warning("Unrecoverable ssl error\n");
+			g_warning("Unrecoverable ssl error, read error %d\n", read_ret);
 			delete_client(c->sd);
 			*len = 0;
 			break;

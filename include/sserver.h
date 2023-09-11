@@ -13,6 +13,7 @@
 #include <stdbool.h>
 #include <glib.h>
 
+#include <component.h>
 #include <serversocket.h>
 #include <client.h>
 

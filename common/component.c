@@ -1,12 +1,13 @@
 #include <sserver.h>
 
-CIRCLEQ_HEAD(components, component_info);
+CIRCLEQ_HEAD(circlehead, component_info);
+struct circlehead components; 
 
 int start_components()
 {
 	int rc = 0;
 	struct component_info *idx;
-	CIRCLEQ_FOREACH(&components, idx, entries) {
+	CIRCLEQ_FOREACH(idx, &components, entries) {
 		g_info("Starting component %s (prio %d)\n", idx->name, idx->prio);
 		if (idx->start) {
 			rc = idx->start();
@@ -24,7 +25,7 @@ void stop_components()
 {
 	int rc = 0;
 	struct component_info *idx;
-	CIRCLEQ_FOREACH_REVERSE(&components, idx, entries) {
+	CIRCLEQ_FOREACH_REVERSE(idx, &components, entries) {
 		g_info("Stopping component %s (prio %d)\n", idx->name, idx->prio);
 		if (idx->start) {
 			rc = idx->stop();
@@ -40,6 +41,11 @@ void stop_components()
 void register_component(struct component_info *info)
 {
 	struct component_info *idx;
+
+	if (info->prio < COMPONENT_PRIO_EARLY) {
+		fprintf(stderr, "Invalid priority for component %s (prio %d)\n", info->name, info->prio);
+		abort();
+	}
 
 	if (CIRCLEQ_EMPTY(&components)) {
 		CIRCLEQ_INSERT_HEAD(&components, info, entries);
@@ -62,7 +68,7 @@ out:
 }
 
 
-static void __attribute__((constructor(100))) init_component_list()
+static void __attribute__((constructor(101))) init_component_list()
 {
 	CIRCLEQ_INIT(&components);
 }

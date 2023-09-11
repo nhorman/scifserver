@@ -12,6 +12,7 @@ void stop_components();
 
 struct component_info {
 	char *name;
+	int prio;
 	int (*start)();
 	int (*stop)();
 	CIRCLEQ_ENTRY(component_info) entries;
@@ -19,18 +20,18 @@ struct component_info {
 
 void register_component(struct component_info *info);
 
-#define COMPONENT_PRIO_EARLY 101
-#define COMPONENT_PRIO_CORE 102
-#define COMPONENT_PRIO_LATE 103
+#define COMPONENT_PRIO_EARLY 102
+#define COMPONENT_PRIO_CORE 103
+#define COMPONENT_PRIO_LATE 104
 
 #define __componentreg(prio) __attribute__((constructor(prio)))
 
 #define REGISTER_COMPONENT(name, start, stop, prio) \
         static struct component_info __ ## name ## _info = { \
                 #name, \
+                prio, \
                 start, \
                 stop, \
-                prio, \
         }; \
         void __componentreg(prio) register_ ## name ## _component() { \
                 register_component(&__ ## name ## _info); \
